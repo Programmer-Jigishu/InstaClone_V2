@@ -13,16 +13,16 @@ import { InputGroup, InputRightElement } from "@chakra-ui/react";
 import usePostComment from "../../hooks/usePostComment";
 import useAuthStore from "../../store/authStore";
 import useLikePost from "../../hooks/useLikePost";
+import useAddToSavedPosts from "../../hooks/useAddToSavedPosts";
 
 function ProfilePostFooter({ post, userName, isProfilePage }) {
   const { handlePostComment, isCommenting } = usePostComment();
   const [comment, setComment] = useState("");
   const authUser = useAuthStore((state) => state.user);
-  // const [isLiked, setIsLiked] = useState(false);
-  // const [likes, setLikes] = useState(0);
-  const [isSaved, setIsSaved] = useState(false);
+  // const [isSaved, setIsSaved] = useState(false);
+  const { isLoading, isSaved, addToSavePost } = useAddToSavedPosts(post.id);
 
-const {handleLikes,isUpdating,likes,isLikedByUser}= useLikePost(post);
+  const { handleLikes, isUpdating, likes, isLikedByUser } = useLikePost(post);
 
   const commentRef = useRef(null);
 
@@ -38,11 +38,7 @@ const {handleLikes,isUpdating,likes,isLikedByUser}= useLikePost(post);
     <Flex direction={"column"} pt={10}>
       <Flex justifyContent={"space-between"} py={3}>
         <Flex gap={5}>
-          <Box
-            onClick={handleLikes}
-            cursor={"pointer"}
-            isLoading={isUpdating}
-          >
+          <Box onClick={handleLikes} cursor={"pointer"} isLoading={isUpdating}>
             {!isLikedByUser ? <FaRegHeart /> : <FaHeart color="red" />}
           </Box>
           <Box
@@ -54,13 +50,9 @@ const {handleLikes,isUpdating,likes,isLikedByUser}= useLikePost(post);
           </Box>
         </Flex>
 
-        <Box
-          onClick={() => {
-            setIsSaved(!isSaved);
-          }}
-        >
-          {!isSaved ? <FaRegBookmark /> : <FaBookmark />}
-        </Box>
+        <Button size={"xs"} isLoading={isLoading} onClick={addToSavePost}>
+          {!isSaved ? <FaRegBookmark />: <FaBookmark />}
+        </Button>
       </Flex>
       <Box>{`${likes} Likes`}</Box>
 

@@ -1,10 +1,10 @@
 import { VStack, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { Skeleton } from "@chakra-ui/react";
 import ProfilePost from "./ProfilePost";
-import useGetUserPosts from "../../hooks/useGetUserPosts";
+import useGetSavedPost from "../../hooks/useGetSavedPost";
 
-function ProfilePosts() {
-  const { isLoading, posts } = useGetUserPosts();
+function SavedPosts({likeNotSaved}) {
+  const { isLoading, posts } = useGetSavedPost(likeNotSaved);
   console.log(posts);
   const noPostsFound = !isLoading && posts.length === 0;
 
@@ -48,4 +48,4 @@ function ProfilePosts() {
   );
 }
 
-export default ProfilePosts;
+export default SavedPosts;

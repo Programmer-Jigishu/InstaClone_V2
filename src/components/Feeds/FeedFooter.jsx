@@ -30,11 +30,13 @@ import { RiMore2Fill } from "react-icons/ri";
 import Caption from "../profile/Caption";
 import Comments from "../profile/Comments";
 import ProfilePostFooter from "../profile/ProfilePostFooter";
+import useAddToSavedPosts from "../../hooks/useAddToSavedPosts";
 
-function FeedFooter({ post, creatorProfile }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+function FeedFooter({ post, creatorProfile, isOpen,onOpen,onClose }) {
+  // const { isOpen, onOpen, onClose } = useDisclosure();
   const lastCommentRef = useRef(null);
-  const [isSaved, setIsSaved] = useState(false);
+
+  const { isLoading, isSaved, addToSavePost } = useAddToSavedPosts(post.id);
 
   const { handlePostComment, isCommenting } = usePostComment();
   const authUser = useAuthStore((state) => state.user);
@@ -42,10 +44,10 @@ function FeedFooter({ post, creatorProfile }) {
   const { handleLikes, isUpdating, likes, isLikedByUser } = useLikePost(post);
 
   const scrollToBottom = () => {
-    if(lastCommentRef.current) {
+    if (lastCommentRef.current) {
       lastCommentRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }
+  };
   const handleSubmitComment = async () => {
     console.log("Post from post footer :", post);
     console.log("Post Id from post footer :", post.id);
@@ -75,13 +77,9 @@ function FeedFooter({ post, creatorProfile }) {
           </Box>
           <FiSend />
         </Flex>
-        <Box
-          onClick={() => {
-            setIsSaved(!isSaved);
-          }}
-        >
+        <Button size={"xs"} onClick={addToSavePost} isLoading={isLoading}>
           {!isSaved ? <FaRegBookmark /> : <FaBookmark />}
-        </Box>
+        </Button>
       </Flex>
       <Text>{`${likes} Likes`}</Text>
       <Flex justifyContent={"space-between"}>
@@ -137,8 +135,7 @@ function FeedFooter({ post, creatorProfile }) {
         size={{ base: "3xl", md: "4xl" }}
         mx={"auto"}
       >
-        
-        {isOpen&& scrollToBottom()}
+        {isOpen && scrollToBottom()}
         <ModalOverlay backgroundColor={"whiteAlpha.100"}>
           <Box
             position={"absolute"}
@@ -217,7 +214,6 @@ function FeedFooter({ post, creatorProfile }) {
                   my={2}
                   ref={lastCommentRef}
                 >
-                  
                   {/* Captions */}
                   <Caption post={post} />
                   {/* Comments */}

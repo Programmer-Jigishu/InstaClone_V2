@@ -169,7 +169,7 @@ function ProfilePost({ post }) {
                     <Text>{userProfile?.userName}</Text>
                   </Flex>
                   <Flex borderRadius={4} gap={6} fontSize={24}>
-                    {authUser?.uid === userProfile?.uid && (
+                    {authUser?.uid === post?.createdBy && (
                       <Flex
                         onClick={handleDeletePost}
                         cursor={"pointer"}
